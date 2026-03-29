@@ -47,9 +47,9 @@ function M.run(items, repo_root, review_file_path, cfg)
   local full_cmd = cmd .. " " .. vim.fn.shellescape(prompt)
 
   if cfg.open_in_split then
-    vim.cmd("botright split")
-    vim.cmd("terminal " .. full_cmd)
-    return true
+    vim.cmd("botright new")
+    local job = vim.fn.termopen(full_cmd)
+    return job > 0
   end
 
   vim.fn.system(full_cmd)
