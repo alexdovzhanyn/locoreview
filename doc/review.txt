@@ -1,0 +1,153 @@
+*review.nvim*  Local-first code review comments for Neovim
+
+review.nvim lets you add, navigate, and resolve lightweight review comments in a
+repo-local markdown file.
+
+==============================================================================
+OVERVIEW                                                        *review-overview*
+
+- Structured markdown file format (`review.md` by default)
+- Local-first workflow for review comments
+- Quickfix + picker navigation
+- Optional integrations (Diffview, signs, agent command)
+
+==============================================================================
+INSTALLATION                                                  *review-install*
+
+With lazy.nvim:
+>
+  {
+    "yourname/review.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      { "sindrets/diffview.nvim", optional = true },
+    },
+    opts = {},
+  }
+<
+
+==============================================================================
+SETUP                                                             *review-setup*
+
+Minimal setup:
+>
+  require("review").setup({})
+<
+
+Key config fields:
+- `review_file` (default: `"review.md"`)
+- `default_severity` (`"low"`, `"medium"`, `"high"`)
+- `keymaps` (`true`, `false`, or override table)
+- `diffview.enabled`
+- `signs.enabled`, `signs.priority`
+- `picker.enabled`, `picker.backend`
+- `diff_only`
+- `agent.enabled`, `agent.cmd`, `agent.open_in_split`
+
+==============================================================================
+COMMANDS                                                      *review-commands*
+
+Core:
+- `:ReviewOpen`
+- `:ReviewAdd`
+- `:ReviewAddRange`
+- `:ReviewList`
+- `:ReviewNext`
+- `:ReviewPrev`
+- `:ReviewMarkFixed`
+- `:ReviewReopen`
+- `:ReviewDiff`
+- `:ReviewFileHistory`
+- `:ReviewFix`
+
+v1.5:
+- `:ReviewEdit`
+- `:ReviewDelete`
+- `:ReviewMarkBlocked`
+- `:ReviewMarkWontfix`
+- `:ReviewListAll [status=open] [severity=high] [file=path]`
+- `:ReviewRefresh`
+- `:ReviewPicker`
+- `:ReviewToggleSigns`
+- `:ReviewAddDiff`
+
+==============================================================================
+KEYMAPS                                                        *review-keymaps*
+
+Default keymaps (when enabled):
+- `<leader>ro` `ReviewOpen`
+- `<leader>ra` `ReviewAdd`
+- `<leader>rA` `ReviewAddRange`
+- `<leader>rl` `ReviewList`
+- `<leader>rn` `ReviewNext`
+- `<leader>rp` `ReviewPrev`
+- `<leader>rf` `ReviewMarkFixed`
+- `<leader>rr` `ReviewReopen`
+- `<leader>rd` `ReviewDiff`
+- `<leader>rh` `ReviewFileHistory`
+- `<leader>rx` `ReviewFix`
+- `<leader>re` `ReviewEdit`
+- `<leader>rD` `ReviewDelete`
+- `<leader>rb` `ReviewMarkBlocked`
+- `<leader>rw` `ReviewMarkWontfix`
+- `<leader>rR` `ReviewRefresh`
+- `<leader>rk` `ReviewPicker`
+- `<leader>rs` `ReviewToggleSigns`
+
+==============================================================================
+REVIEW FILE FORMAT                                            *review-file-format*
+
+Canonical format:
+>
+  # Review Comments
+
+  ## RV-0001
+  file: lua/review/store.lua
+  line: 42
+  end_line:
+  severity: medium
+  status: open
+  author:
+  created_at: 2026-03-28T15:30:00Z
+  updated_at: 2026-03-28T15:30:00Z
+
+  issue:
+  Explain the concern.
+
+  requested_change:
+  Explain the proposed fix.
+
+  ---
+<
+
+Rules:
+- Header required: `# Review Comments`
+- IDs are `RV-XXXX`
+- Item separator is `---`
+- `issue:` and `requested_change:` are multiline blocks
+- `end_line` and `author` may be blank
+
+==============================================================================
+INTEGRATIONS                                                *review-integrations*
+
+Diffview:
+- `:ReviewDiff`
+- `:ReviewFileHistory`
+
+Picker backends:
+- auto: Telescope -> fzf-lua -> snacks -> `vim.ui.select`
+
+Agent:
+- `:ReviewFix` runs `agent.cmd` with a generated prompt
+
+==============================================================================
+TROUBLESHOOTING                                            *review-troubleshooting*
+
+- If commands are missing, verify plugin loaded and run setup.
+- If add commands fail, verify current buffer is a file in the repo.
+- If quickfix is empty, check item statuses and parser errors.
+- If Diffview commands fail, install `sindrets/diffview.nvim`.
+- If picker command fails, set `picker.backend = "none"` or install a backend.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
